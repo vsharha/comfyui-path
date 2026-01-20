@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+COMFY_DIR="$HOME/ComfyUI"
+URL="http://127.0.0.1:8188"
+
+cd "$COMFY_DIR" || exit 1
+
+uv run python main.py "$@" &
+
+COMFY_PID=$!
+
+until curl -s "$URL" >/dev/null; do
+    sleep 0.5
+done
+
+xdg-open "$URL"
+
+wait $COMFY_PID
